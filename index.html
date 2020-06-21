@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600&display=swap" rel="stylesheet">
+    <title>Document</title>
+    <style>
+        body{
+            margin:0;
+            padding:0;
+            box-sizing: border-box;
+            background-color: rgb(184, 241, 50);
+            font-family: Overpass;
+            font-size: 14px;
+        }
+        .geral{
+            width: 800px;
+            height: 600px;
+            border: 2px solid rgb(78, 104, 219);
+            margin: 30px auto;
+            display: block;
+        }
+        .container{
+            width:600px;
+            height: 450px;
+            background-color: rgb(78, 104, 219);
+            border-radius: 15px;
+            box-shadow: 2px 2px 5px rgb(78, 104, 219);  
+            margin: 0px auto;
+        }
+        .main{
+            width: 100%;
+            height: 300px;
+            padding: 40px 0px;
+            transition: all 1s;
+        }         
+        .main p{
+            width: 450px;
+            height: 30px;
+            background-color: rgb(184, 241, 50);
+            color: rgb(78, 104, 219);
+            display: block;
+            border-radius: 15px;
+            margin: 20px auto;
+            padding: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .form{
+            width: 100%;            
+        }  
+        input[type=text]{
+            width: 200px;
+            height: 30px;
+            border-radius: 6px;
+            margin: 10px auto;
+            display: block;
+            outline-style: none;
+            border: 1px solid rgb(78, 104, 219);
+        }
+        a{
+            width: 150px;
+            height: 30px;
+            background-color: rgb(78, 104, 219);
+            cursor: pointer;
+            display: block;
+            margin: 10px auto;
+            color:white;
+            border-radius: 15px;
+            text-align: center;
+            padding-top: 10px;
+            box-shadow: 2px 2px 5px black;
+        }
+        @keyframes anima {
+            0%{
+                /* transform: scaleX(0); */
+                opacity: 0;
+            }
+            100%{
+                /* transform: scaleX(1); */
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="geral">
+        <div class="form">
+            <input type="text" placeholder="Digite CEP..." id="cep">
+            <a onclick="consultar(this)">Pesquisar</a>
+        </div>     
+        <div class="container">
+            <div class="main"></div>
+        </div>
+    </div>
+
+    <script>
+        function consultar(event){
+            event.preventDefault;
+
+            var divMain = document.querySelector('.main')
+            divMain.style.animationName = "";
+            divMain.style.animationDuration = 0;
+
+            var cep = document.querySelector('#cep');
+            
+            const url = 'https://viacep.com.br/ws/'+cep.value+'/json/';
+            
+            fetch(url)
+            .then(response=>{
+                if(!response.ok){
+                    throw Error('Erro na consulta');
+                }    
+                return response.json();
+            })
+            .then(dados=>{
+                console.log(dados);
+                const html = 
+                `
+                <p>Logradouro: ${dados.logradouro}</p>
+                <p>Bairro: ${dados.bairro}</p>
+                <p>Complemento: ${dados.complemento}</p>
+                <p>Localidade: ${dados.localidade}</p>
+                <p>UF: ${dados.uf}</p>
+                `;                
+
+                divMain.innerHTML = html;
+                divMain.style.animationName = 'anima';
+                divMain.style.animationDuration = '.5s';
+            })                      
+        }
+    </script>
+</body>
+</html>
